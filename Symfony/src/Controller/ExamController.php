@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/exam', name: 'exam_routes')]
 class ExamController extends AbstractController
@@ -41,6 +42,7 @@ class ExamController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
+    #[IsGranted("ROLE_CLIENT")]
     #[Route('/', name: 'get_exams', methods: ['GET'])]
     public function getExams(Request $request): JsonResponse
     {
@@ -60,6 +62,7 @@ class ExamController extends AbstractController
      * @return JsonResponse
      * @throws \DateMalformedStringException
      */
+    #[IsGranted("ROLE_MANAGER")]
     #[Route('/', name: 'create_exam', methods: ['POST'])]
     public function createExam(Request $request): JsonResponse
     {
@@ -94,6 +97,7 @@ class ExamController extends AbstractController
      * @param int $id
      * @return JsonResponse
      */
+    #[IsGranted("ROLE_CLIENT")]
     #[Route('/{id}', name: 'get_exam', methods: ['GET'])]
     public function getExam(int $id): JsonResponse
     {
@@ -114,6 +118,7 @@ class ExamController extends AbstractController
      * @return JsonResponse
      * @throws \DateMalformedStringException
      */
+    #[IsGranted("ROLE_MANAGER")]
     #[Route('/{id}', name: 'update_exam', methods: ['PATCH'])]
     public function updateExam(Request $request, int $id): JsonResponse
     {
@@ -164,6 +169,7 @@ class ExamController extends AbstractController
      * @param int $id
      * @return JsonResponse
      */
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/{id}', name: 'delete_exam', methods: ['DELETE'])]
     public function deleteExam(int $id): JsonResponse
     {

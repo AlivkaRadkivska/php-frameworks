@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/course', name: 'course_routes')]
 class CourseController extends AbstractController
@@ -34,6 +35,7 @@ class CourseController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
+    #[IsGranted("ROLE_CLIENT")]
     #[Route('/', name: 'get_courses', methods: ['GET'])]
     public function getCourses(Request $request): JsonResponse
     {
@@ -52,6 +54,7 @@ class CourseController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
+    #[IsGranted("ROLE_MANAGER")]
     #[Route('/', name: 'create_course', methods: ['POST'])]
     public function createCourse(Request $request): JsonResponse
     {
@@ -74,6 +77,7 @@ class CourseController extends AbstractController
      * @param int $id
      * @return JsonResponse
      */
+    #[IsGranted("ROLE_CLIENT")]
     #[Route('/{id}', name: 'get_course', methods: ['GET'])]
     public function getCourse(int $id): JsonResponse
     {
@@ -93,6 +97,7 @@ class CourseController extends AbstractController
      * @param int $id
      * @return JsonResponse
      */
+    #[IsGranted("ROLE_MANAGER")]
     #[Route('/{id}', name: 'update_course', methods: ['PATCH'])]
     public function updateCourse(Request $request, int $id): JsonResponse
     {
@@ -127,6 +132,7 @@ class CourseController extends AbstractController
      * @param int $id
      * @return JsonResponse
      */
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/{id}', name: 'delete_course', methods: ['DELETE'])]
     public function deleteCourse(int $id): JsonResponse
     {

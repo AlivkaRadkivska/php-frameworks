@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/group', name: 'group_routes')]
 class GroupController extends AbstractController
@@ -36,6 +37,7 @@ class GroupController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
+    #[IsGranted("ROLE_CLIENT")]
     #[Route('/', name: 'get_groups', methods: ['GET'])]
     public function getGroups(Request $request): JsonResponse
     {
@@ -54,6 +56,7 @@ class GroupController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
+    #[IsGranted("ROLE_MANAGER")]
     #[Route('/', name: 'create_group', methods: ['POST'])]
     public function createGroup(Request $request): JsonResponse
     {
@@ -76,6 +79,7 @@ class GroupController extends AbstractController
      * @param int $id
      * @return JsonResponse
      */
+    #[IsGranted("ROLE_CLIENT")]
     #[Route('/{id}', name: 'get_group', methods: ['GET'])]
     public function getGroup(int $id): JsonResponse
     {
@@ -95,6 +99,7 @@ class GroupController extends AbstractController
      * @param int $id
      * @return JsonResponse
      */
+    #[IsGranted("ROLE_MANAGER")]
     #[Route('/{id}', name: 'update_group', methods: ['PATCH'])]
     public function updateGroup(Request $request, int $id): JsonResponse
     {
@@ -129,6 +134,7 @@ class GroupController extends AbstractController
      * @param int $id
      * @return JsonResponse
      */
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/{id}', name: 'delete_group', methods: ['DELETE'])]
     public function deleteGroup(int $id): JsonResponse
     {

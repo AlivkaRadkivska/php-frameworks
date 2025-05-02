@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/exam-result', name: 'exam_result_routes')]
 class ExamResultController extends AbstractController
@@ -41,6 +42,7 @@ class ExamResultController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
+    #[IsGranted("ROLE_CLIENT")]
     #[Route('/', name: 'get_exam_results', methods: ['GET'])]
     public function getExamResults(Request $request): JsonResponse
     {
@@ -59,6 +61,7 @@ class ExamResultController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
+    #[IsGranted("ROLE_MANAGER")]
     #[Route('/', name: 'create_exam_result', methods: ['POST'])]
     public function createExamResult(Request $request): JsonResponse
     {
@@ -91,6 +94,7 @@ class ExamResultController extends AbstractController
      * @param int $id
      * @return JsonResponse
      */
+    #[IsGranted("ROLE_CLIENT")]
     #[Route('/{id}', name: 'get_exam_result', methods: ['GET'])]
     public function getExamResult(int $id): JsonResponse
     {
@@ -110,6 +114,7 @@ class ExamResultController extends AbstractController
      * @param int $id
      * @return JsonResponse
      */
+    #[IsGranted("ROLE_MANAGER")]
     #[Route('/{id}', name: 'update_exam_result', methods: ['PATCH'])]
     public function updateExamResult(Request $request, int $id): JsonResponse
     {
@@ -152,6 +157,7 @@ class ExamResultController extends AbstractController
      * @param int $id
      * @return JsonResponse
      */
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/{id}', name: 'delete_exam_result', methods: ['DELETE'])]
     public function deleteExamResult(int $id): JsonResponse
     {

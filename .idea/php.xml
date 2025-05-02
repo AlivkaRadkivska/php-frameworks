@@ -262,6 +262,10 @@
       <path value="$PROJECT_DIR$/Laravel/vendor/lcobucci/jwt" />
       <path value="$PROJECT_DIR$/Laravel/vendor/lcobucci/clock" />
       <path value="$PROJECT_DIR$/Laravel/vendor/tymon/jwt-auth" />
+      <path value="$PROJECT_DIR$/Symfony/vendor/lcobucci/jwt" />
+      <path value="$PROJECT_DIR$/Symfony/vendor/lcobucci/clock" />
+      <path value="$PROJECT_DIR$/Symfony/vendor/lexik/jwt-authentication-bundle" />
+      <path value="$PROJECT_DIR$/Symfony/vendor/namshi/jose" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1" />

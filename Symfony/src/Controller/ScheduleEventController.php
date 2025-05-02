@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/schedule-event', name: 'schedule_event_routes')]
 class ScheduleEventController extends AbstractController
@@ -46,6 +47,7 @@ class ScheduleEventController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
+    #[IsGranted("ROLE_CLIENT")]
     #[Route('/', name: 'get_schedule_events', methods: ['GET'])]
     public function getScheduleEvents(Request $request): JsonResponse
     {
@@ -65,6 +67,7 @@ class ScheduleEventController extends AbstractController
      * @return JsonResponse
      * @throws \DateMalformedStringException
      */
+    #[IsGranted("ROLE_MANAGER")]
     #[Route('/', name: 'create_schedule_event', methods: ['POST'])]
     public function createScheduleEvent(Request $request): JsonResponse
     {
@@ -103,6 +106,7 @@ class ScheduleEventController extends AbstractController
      * @param int $id
      * @return JsonResponse
      */
+    #[IsGranted("ROLE_CLIENT")]
     #[Route('/{id}', name: 'get_schedule_event', methods: ['GET'])]
     public function getScheduleEvent(int $id): JsonResponse
     {
@@ -123,6 +127,7 @@ class ScheduleEventController extends AbstractController
      * @return JsonResponse
      * @throws \DateMalformedStringException
      */
+    #[IsGranted("ROLE_MANAGER")]
     #[Route('/{id}', name: 'update_schedule_event', methods: ['PATCH'])]
     public function updateScheduleEvent(Request $request, int $id): JsonResponse
     {
@@ -173,6 +178,7 @@ class ScheduleEventController extends AbstractController
      * @param int $id
      * @return JsonResponse
      */
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/{id}', name: 'delete_schedule_event', methods: ['DELETE'])]
     public function deleteScheduleEvent(int $id): JsonResponse
     {

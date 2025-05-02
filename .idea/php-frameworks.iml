@@ -9,7 +9,6 @@
       <sourceFolder url="file://$MODULE_DIR$/Laravel/tests/Feature" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/Laravel/tests/Unit" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/Symfony/src" isTestSource="false" packagePrefix="App\" />
-      <sourceFolder url="file://$MODULE_DIR$/Symfony/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/Symfony/tests" isTestSource="true" packagePrefix="App\Tests\" />
       <excludeFolder url="file://$MODULE_DIR$/Laravel/vendor/brick/math" />
       <excludeFolder url="file://$MODULE_DIR$/Laravel/vendor/carbonphp/carbon-doctrine-types" />
@@ -142,9 +141,13 @@
       <excludeFolder url="file://$MODULE_DIR$/Symfony/vendor/doctrine/persistence" />
       <excludeFolder url="file://$MODULE_DIR$/Symfony/vendor/doctrine/sql-formatter" />
       <excludeFolder url="file://$MODULE_DIR$/Symfony/vendor/egulias/email-validator" />
+      <excludeFolder url="file://$MODULE_DIR$/Symfony/vendor/lcobucci/clock" />
+      <excludeFolder url="file://$MODULE_DIR$/Symfony/vendor/lcobucci/jwt" />
+      <excludeFolder url="file://$MODULE_DIR$/Symfony/vendor/lexik/jwt-authentication-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/Symfony/vendor/masterminds/html5" />
       <excludeFolder url="file://$MODULE_DIR$/Symfony/vendor/monolog/monolog" />
       <excludeFolder url="file://$MODULE_DIR$/Symfony/vendor/myclabs/deep-copy" />
+      <excludeFolder url="file://$MODULE_DIR$/Symfony/vendor/namshi/jose" />
       <excludeFolder url="file://$MODULE_DIR$/Symfony/vendor/nikic/php-parser" />
       <excludeFolder url="file://$MODULE_DIR$/Symfony/vendor/phar-io/manifest" />
       <excludeFolder url="file://$MODULE_DIR$/Symfony/vendor/phar-io/version" />
