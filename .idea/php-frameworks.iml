@@ -35,6 +35,8 @@
       <excludeFolder url="file://$MODULE_DIR$/Laravel/vendor/laravel/sanctum" />
       <excludeFolder url="file://$MODULE_DIR$/Laravel/vendor/laravel/serializable-closure" />
       <excludeFolder url="file://$MODULE_DIR$/Laravel/vendor/laravel/tinker" />
+      <excludeFolder url="file://$MODULE_DIR$/Laravel/vendor/lcobucci/clock" />
+      <excludeFolder url="file://$MODULE_DIR$/Laravel/vendor/lcobucci/jwt" />
       <excludeFolder url="file://$MODULE_DIR$/Laravel/vendor/league/commonmark" />
       <excludeFolder url="file://$MODULE_DIR$/Laravel/vendor/league/config" />
       <excludeFolder url="file://$MODULE_DIR$/Laravel/vendor/league/flysystem" />
@@ -120,6 +122,7 @@
       <excludeFolder url="file://$MODULE_DIR$/Laravel/vendor/symfony/yaml" />
       <excludeFolder url="file://$MODULE_DIR$/Laravel/vendor/theseer/tokenizer" />
       <excludeFolder url="file://$MODULE_DIR$/Laravel/vendor/tijsverkoyen/css-to-inline-styles" />
+      <excludeFolder url="file://$MODULE_DIR$/Laravel/vendor/tymon/jwt-auth" />
       <excludeFolder url="file://$MODULE_DIR$/Laravel/vendor/vlucas/phpdotenv" />
       <excludeFolder url="file://$MODULE_DIR$/Laravel/vendor/voku/portable-ascii" />
       <excludeFolder url="file://$MODULE_DIR$/Laravel/vendor/webmozart/assert" />
