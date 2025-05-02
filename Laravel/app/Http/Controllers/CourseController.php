@@ -3,21 +3,43 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
-use Illuminate\Http\Request;
+use App\Repositories\CourseRepository;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class CourseController extends Controller
 {
+    public const ITEMS_PER_PAGE = 5;
+
+    /**
+     * @var CourseRepository
+     */
+    private CourseRepository $repo;
+
+    /**
+     * @param CourseRepository $repo
+     */
+    public function __construct(CourseRepository $repo)
+    {
+        $this->repo = $repo;
+    }
+
     /**
      * Display a listing of the courses.
      *
+     * @param Request $request
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $courses = Course::all();
-        return response()->json($courses, Response::HTTP_OK);
+        $filters = $request->only(['name', 'description', 'credits']);
+        $perPage = (int) $request->query('itemsPerPage', self::ITEMS_PER_PAGE);
+        $page    = (int) $request->query('page', 1);
+
+        $data = $this->repo->getAllByFilter($filters, $perPage, $page);
+
+        return response()->json($data, JsonResponse::HTTP_OK);
     }
 
     /**

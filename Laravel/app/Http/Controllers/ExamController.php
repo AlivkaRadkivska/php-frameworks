@@ -3,21 +3,43 @@
 namespace App\Http\Controllers;
 
 use App\Models\Exam;
-use Illuminate\Http\Request;
+use App\Repositories\ExamRepository;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class ExamController extends Controller
 {
+    public const ITEMS_PER_PAGE = 5;
+
+    /**
+     * @var ExamRepository
+     */
+    private ExamRepository $repo;
+
+    /**
+     * @param ExamRepository $repo
+     */
+    public function __construct(ExamRepository $repo)
+    {
+        $this->repo = $repo;
+    }
+
     /**
      * Display a listing of the exams.
      *
+     * @param Request $request
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $exams = Exam::all();
-        return response()->json($exams, Response::HTTP_OK);
+        $filters = $request->only(['title', 'type', 'course_id', 'start_date']);
+        $perPage = (int) $request->query('itemsPerPage', self::ITEMS_PER_PAGE);
+        $page    = (int) $request->query('page', 1);
+
+        $data = $this->repo->getAllByFilter($filters, $perPage, $page);
+
+        return response()->json($data, JsonResponse::HTTP_OK);
     }
 
     /**

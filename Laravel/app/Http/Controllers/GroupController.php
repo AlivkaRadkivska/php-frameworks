@@ -3,21 +3,43 @@
 namespace App\Http\Controllers;
 
 use App\Models\Group;
+use App\Repositories\GroupRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 
 class GroupController extends Controller
 {
+    public const ITEMS_PER_PAGE = 5;
+
+    /**
+     * @var GroupRepository
+     */
+    private GroupRepository $repo;
+
+    /**
+     * @param GroupRepository $repo
+     */
+    public function __construct(GroupRepository $repo)
+    {
+        $this->repo = $repo;
+    }
+
     /**
      * Display a listing of the groups.
      *
+     * @param Request $request
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $groups = Group::all();
-        return response()->json($groups, Response::HTTP_OK);
+        $filters = $request->only(['name', 'major', 'year']);
+        $perPage = (int) $request->query('itemsPerPage', self::ITEMS_PER_PAGE);
+        $page    = (int) $request->query('page', 1);
+
+        $data = $this->repo->getAllByFilter($filters, $perPage, $page);
+
+        return response()->json($data, JsonResponse::HTTP_OK);
     }
 
     /**

@@ -3,21 +3,43 @@
 namespace App\Http\Controllers;
 
 use App\Models\ScheduleEvent;
+use App\Repositories\ScheduleEventRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 
 class ScheduleEventController extends Controller
 {
+    public const ITEMS_PER_PAGE = 5;
+
+    /**
+     * @var ScheduleEventRepository
+     */
+    private ScheduleEventRepository $repo;
+
+    /**
+     * @param ScheduleEventRepository $repo
+     */
+    public function __construct(ScheduleEventRepository $repo)
+    {
+        $this->repo = $repo;
+    }
+
     /**
      * Display a listing of the schedule events.
      *
+     * @param Request $request
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $events = ScheduleEvent::all();
-        return response()->json($events, Response::HTTP_OK);
+        $filters = $request->only(['start_date', 'end_date', 'meeting_link', 'course_id', 'group_id']);
+        $perPage = (int) $request->query('itemsPerPage', self::ITEMS_PER_PAGE);
+        $page    = (int) $request->query('page', 1);
+
+        $data = $this->repo->getAllByFilter($filters, $perPage, $page);
+
+        return response()->json($data, JsonResponse::HTTP_OK);
     }
 
     /**
