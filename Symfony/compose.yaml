@@ -1,20 +1,35 @@
+version: '3.8'
 
 services:
-###> doctrine/doctrine-bundle ###
-  database:
-    image: postgres:${POSTGRES_VERSION:-16}-alpine
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB:-app}
-      # You should definitely change the password in production
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-!ChangeMe!}
-      POSTGRES_USER: ${POSTGRES_USER:-app}
+  db-symf-online-learning:
+    image: mysql:5.7
     volumes:
-      - database_data:/var/lib/postgresql/data:rw
-      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
-      # - ./docker/db/data:/var/lib/postgresql/data:rw
-###< doctrine/doctrine-bundle ###
+      - db-symf-online-learning-data:/var/lib/mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: db-symf-online-learning
+      MYSQL_PASSWORD: password
+    networks:
+      - db-symf-online-learning-net
+
+  db-symf-online-learning-phpmyadmin:
+    depends_on:
+      - db-symf-online-learning
+    image: phpmyadmin
+    restart: always
+    ports:
+      - "8090:80"
+    environment:
+      PMA_HOST: db-symf-online-learning
+      MYSQL_ROOT_PASSWORD: password
+    networks:
+      - db-symf-online-learning-net
+
+networks:
+  db-symf-online-learning-net:
 
 volumes:
-###> doctrine/doctrine-bundle ###
-  database_data:
-###< doctrine/doctrine-bundle ###
+  db-symf-online-learning-data:
