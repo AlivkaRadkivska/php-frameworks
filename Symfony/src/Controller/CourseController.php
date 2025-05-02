@@ -45,6 +45,7 @@ class CourseController extends AbstractController
         return new JsonResponse($data, Response::HTTP_OK);
     }
 
+
     /**
      * Create a new course.
      *

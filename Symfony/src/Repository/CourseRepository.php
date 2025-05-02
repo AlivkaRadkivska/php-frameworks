@@ -22,6 +22,7 @@ class CourseRepository extends ServiceEntityRepository
         $this->paginateService = $paginateService;
     }
 
+
     /**
      * @param array $data
      * @param int $itemsPerPage

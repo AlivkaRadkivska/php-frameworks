@@ -44,4 +44,5 @@ class ExamResultRepository extends ServiceEntityRepository
 
         return $this->paginateService->paginate($qb, $itemsPerPage, $page);
     }
+
 }
