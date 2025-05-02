@@ -17,12 +17,23 @@ class GroupController extends AbstractController
     private EntityManagerInterface $entityManager;
     private GroupRepository $groupRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, GroupRepository $groupRepository)
-    {
+    /**
+     * @param EntityManagerInterface $entityManager
+     * @param GroupRepository $groupRepository
+     */
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        GroupRepository $groupRepository
+    ) {
         $this->entityManager = $entityManager;
         $this->groupRepository = $groupRepository;
     }
 
+    /**
+     * Get all groups.
+     *
+     * @return JsonResponse
+     */
     #[Route('/', name: 'get_groups', methods: ['GET'])]
     public function getGroups(): JsonResponse
     {
@@ -31,6 +42,12 @@ class GroupController extends AbstractController
         return new JsonResponse($data, Response::HTTP_OK);
     }
 
+    /**
+     * Create a new group.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/', name: 'create_group', methods: ['POST'])]
     public function createGroup(Request $request): JsonResponse
     {
@@ -39,7 +56,7 @@ class GroupController extends AbstractController
         $group = new Group();
         $group->setName($data['name'] ?? '');
         $group->setMajor($data['major'] ?? '');
-        $group->setYear((int) ($data['year'] ?? 0));
+        $group->setYear((int) ($data['year'] ?? 1));
 
         $this->entityManager->persist($group);
         $this->entityManager->flush();
@@ -47,6 +64,12 @@ class GroupController extends AbstractController
         return new JsonResponse($group->jsonSerialize(), Response::HTTP_CREATED);
     }
 
+    /**
+     * Get a group by ID.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
     #[Route('/{id}', name: 'get_group', methods: ['GET'])]
     public function getGroup(int $id): JsonResponse
     {
@@ -59,6 +82,13 @@ class GroupController extends AbstractController
         return new JsonResponse($group->jsonSerialize(), Response::HTTP_OK);
     }
 
+    /**
+     * Update a group by ID.
+     *
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     */
     #[Route('/{id}', name: 'update_group', methods: ['PATCH'])]
     public function updateGroup(Request $request, int $id): JsonResponse
     {
@@ -87,6 +117,12 @@ class GroupController extends AbstractController
         return new JsonResponse($group->jsonSerialize(), Response::HTTP_OK);
     }
 
+    /**
+     * Delete a group by ID.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
     #[Route('/{id}', name: 'delete_group', methods: ['DELETE'])]
     public function deleteGroup(int $id): JsonResponse
     {

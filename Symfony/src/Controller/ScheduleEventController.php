@@ -21,6 +21,12 @@ class ScheduleEventController extends AbstractController
     private CourseRepository $courseRepository;
     private GroupRepository $groupRepository;
 
+    /**
+     * @param EntityManagerInterface $entityManager
+     * @param ScheduleEventRepository $scheduleEventRepository
+     * @param CourseRepository $courseRepository
+     * @param GroupRepository $groupRepository
+     */
     public function __construct(
         EntityManagerInterface $entityManager,
         ScheduleEventRepository $scheduleEventRepository,
@@ -33,20 +39,31 @@ class ScheduleEventController extends AbstractController
         $this->groupRepository = $groupRepository;
     }
 
+    /**
+     * Get all schedule events.
+     *
+     * @return JsonResponse
+     */
     #[Route('/', name: 'get_schedule_events', methods: ['GET'])]
     public function getScheduleEvents(): JsonResponse
     {
         $events = $this->scheduleEventRepository->findAll();
-        $data = array_map(fn(ScheduleEvent $e) => $e->jsonSerialize(), $events);
+        $data = array_map(fn(ScheduleEvent $event) => $event->jsonSerialize(), $events);
         return new JsonResponse($data, Response::HTTP_OK);
     }
 
+    /**
+     * Create a new schedule event.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/', name: 'create_schedule_event', methods: ['POST'])]
     public function createScheduleEvent(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
 
-        if (!isset($data['courseId'], $data['groupId'])) {
+        if (!isset($data['courseId']) || !isset($data['groupId'])) {
             return new JsonResponse(['message' => 'courseId and groupId are required'], Response::HTTP_BAD_REQUEST);
         }
 
@@ -73,6 +90,12 @@ class ScheduleEventController extends AbstractController
         return new JsonResponse($event->jsonSerialize(), Response::HTTP_CREATED);
     }
 
+    /**
+     * Get a schedule event by ID.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
     #[Route('/{id}', name: 'get_schedule_event', methods: ['GET'])]
     public function getScheduleEvent(int $id): JsonResponse
     {
@@ -85,6 +108,13 @@ class ScheduleEventController extends AbstractController
         return new JsonResponse($event->jsonSerialize(), Response::HTTP_OK);
     }
 
+    /**
+     * Update a schedule event by ID.
+     *
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     */
     #[Route('/{id}', name: 'update_schedule_event', methods: ['PATCH'])]
     public function updateScheduleEvent(Request $request, int $id): JsonResponse
     {
@@ -129,6 +159,12 @@ class ScheduleEventController extends AbstractController
         return new JsonResponse($event->jsonSerialize(), Response::HTTP_OK);
     }
 
+    /**
+     * Delete a schedule event by ID.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
     #[Route('/{id}', name: 'delete_schedule_event', methods: ['DELETE'])]
     public function deleteScheduleEvent(int $id): JsonResponse
     {

@@ -9,8 +9,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Exam extends Model
 {
     use HasFactory;
+
+    /**
+     * @var string[]
+     */
     protected $fillable = ['title', 'type', 'duration', 'max_grade', 'start_date', 'course_id'];
 
+    /**
+     * @return BelongsTo
+     */
     public function course(): BelongsTo
     {
         return $this->belongsTo(Course::class);

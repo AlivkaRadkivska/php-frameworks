@@ -9,7 +9,13 @@ class Group extends Model
 {
     use HasFactory;
 
+    /**
+     * @var string
+     */
     protected $table = 'groups'; // бо "group" — зарезервоване слово в SQL
 
+    /**
+     * @var string[]
+     */
     protected $fillable = ['name', 'major', 'year'];
 }

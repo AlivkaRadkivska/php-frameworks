@@ -9,13 +9,23 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ScheduleEvent extends Model
 {
     use HasFactory;
+
+    /**
+     * @var string[]
+     */
     protected $fillable = ['start_date', 'end_date', 'meeting_link', 'course_id', 'group_id'];
 
+    /**
+     * @return BelongsTo
+     */
     public function course(): BelongsTo
     {
         return $this->belongsTo(Course::class);
     }
 
+    /**
+     * @return BelongsTo
+     */
     public function group(): BelongsTo
     {
         return $this->belongsTo(Group::class);

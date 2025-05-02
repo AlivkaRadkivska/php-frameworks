@@ -19,6 +19,11 @@ class ExamController extends AbstractController
     private ExamRepository $examRepository;
     private CourseRepository $courseRepository;
 
+    /**
+     * @param EntityManagerInterface $entityManager
+     * @param ExamRepository $examRepository
+     * @param CourseRepository $courseRepository
+     */
     public function __construct(
         EntityManagerInterface $entityManager,
         ExamRepository $examRepository,
@@ -29,6 +34,11 @@ class ExamController extends AbstractController
         $this->courseRepository = $courseRepository;
     }
 
+    /**
+     * Get all exams.
+     *
+     * @return JsonResponse
+     */
     #[Route('/', name: 'get_exams', methods: ['GET'])]
     public function getExams(): JsonResponse
     {
@@ -37,6 +47,12 @@ class ExamController extends AbstractController
         return new JsonResponse($data, Response::HTTP_OK);
     }
 
+    /**
+     * Create a new exam.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/', name: 'create_exam', methods: ['POST'])]
     public function createExam(Request $request): JsonResponse
     {
@@ -65,6 +81,12 @@ class ExamController extends AbstractController
         return new JsonResponse($exam->jsonSerialize(), Response::HTTP_CREATED);
     }
 
+    /**
+     * Get an exam by ID.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
     #[Route('/{id}', name: 'get_exam', methods: ['GET'])]
     public function getExam(int $id): JsonResponse
     {
@@ -77,6 +99,13 @@ class ExamController extends AbstractController
         return new JsonResponse($exam->jsonSerialize(), Response::HTTP_OK);
     }
 
+    /**
+     * Update an exam by ID.
+     *
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     */
     #[Route('/{id}', name: 'update_exam', methods: ['PATCH'])]
     public function updateExam(Request $request, int $id): JsonResponse
     {
@@ -121,6 +150,12 @@ class ExamController extends AbstractController
         return new JsonResponse($exam->jsonSerialize(), Response::HTTP_OK);
     }
 
+    /**
+     * Delete an exam by ID.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
     #[Route('/{id}', name: 'delete_exam', methods: ['DELETE'])]
     public function deleteExam(int $id): JsonResponse
     {

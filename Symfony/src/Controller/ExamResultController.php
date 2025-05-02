@@ -19,6 +19,11 @@ class ExamResultController extends AbstractController
     private ExamResultRepository $examResultRepository;
     private ExamRepository $examRepository;
 
+    /**
+     * @param EntityManagerInterface $entityManager
+     * @param ExamResultRepository $examResultRepository
+     * @param ExamRepository $examRepository
+     */
     public function __construct(
         EntityManagerInterface $entityManager,
         ExamResultRepository $examResultRepository,
@@ -29,14 +34,25 @@ class ExamResultController extends AbstractController
         $this->examRepository = $examRepository;
     }
 
+    /**
+     * Get all exam results.
+     *
+     * @return JsonResponse
+     */
     #[Route('/', name: 'get_exam_results', methods: ['GET'])]
     public function getExamResults(): JsonResponse
     {
         $results = $this->examResultRepository->findAll();
-        $data = array_map(fn(ExamResult $r) => $r->jsonSerialize(), $results);
+        $data = array_map(fn(ExamResult $result) => $result->jsonSerialize(), $results);
         return new JsonResponse($data, Response::HTTP_OK);
     }
 
+    /**
+     * Create a new exam result.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/', name: 'create_exam_result', methods: ['POST'])]
     public function createExamResult(Request $request): JsonResponse
     {
@@ -63,6 +79,12 @@ class ExamResultController extends AbstractController
         return new JsonResponse($result->jsonSerialize(), Response::HTTP_CREATED);
     }
 
+    /**
+     * Get an exam result by ID.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
     #[Route('/{id}', name: 'get_exam_result', methods: ['GET'])]
     public function getExamResult(int $id): JsonResponse
     {
@@ -75,6 +97,13 @@ class ExamResultController extends AbstractController
         return new JsonResponse($result->jsonSerialize(), Response::HTTP_OK);
     }
 
+    /**
+     * Update an exam result by ID.
+     *
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     */
     #[Route('/{id}', name: 'update_exam_result', methods: ['PATCH'])]
     public function updateExamResult(Request $request, int $id): JsonResponse
     {
@@ -111,6 +140,12 @@ class ExamResultController extends AbstractController
         return new JsonResponse($result->jsonSerialize(), Response::HTTP_OK);
     }
 
+    /**
+     * Delete an exam result by ID.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
     #[Route('/{id}', name: 'delete_exam_result', methods: ['DELETE'])]
     public function deleteExamResult(int $id): JsonResponse
     {

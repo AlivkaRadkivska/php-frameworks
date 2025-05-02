@@ -17,12 +17,21 @@ class CourseController extends AbstractController
     private EntityManagerInterface $entityManager;
     private CourseRepository $courseRepository;
 
+    /**
+     * @param EntityManagerInterface $entityManager
+     * @param CourseRepository $courseRepository
+     */
     public function __construct(EntityManagerInterface $entityManager, CourseRepository $courseRepository)
     {
         $this->entityManager = $entityManager;
         $this->courseRepository = $courseRepository;
     }
 
+    /**
+     * Get all courses.
+     *
+     * @return JsonResponse
+     */
     #[Route('/', name: 'get_courses', methods: ['GET'])]
     public function getCourses(): JsonResponse
     {
@@ -31,6 +40,12 @@ class CourseController extends AbstractController
         return new JsonResponse($data, Response::HTTP_OK);
     }
 
+    /**
+     * Create a new course.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/', name: 'create_course', methods: ['POST'])]
     public function createCourse(Request $request): JsonResponse
     {
@@ -47,6 +62,12 @@ class CourseController extends AbstractController
         return new JsonResponse($course->jsonSerialize(), Response::HTTP_CREATED);
     }
 
+    /**
+     * Get a course by ID.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
     #[Route('/{id}', name: 'get_course', methods: ['GET'])]
     public function getCourse(int $id): JsonResponse
     {
@@ -59,6 +80,13 @@ class CourseController extends AbstractController
         return new JsonResponse($course->jsonSerialize(), Response::HTTP_OK);
     }
 
+    /**
+     * Update a course by ID.
+     *
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     */
     #[Route('/{id}', name: 'update_course', methods: ['PATCH'])]
     public function updateCourse(Request $request, int $id): JsonResponse
     {
@@ -87,6 +115,12 @@ class CourseController extends AbstractController
         return new JsonResponse($course->jsonSerialize(), Response::HTTP_OK);
     }
 
+    /**
+     * Delete a course by ID.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
     #[Route('/{id}', name: 'delete_course', methods: ['DELETE'])]
     public function deleteCourse(int $id): JsonResponse
     {
