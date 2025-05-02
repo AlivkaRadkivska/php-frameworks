@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\ScheduleEvent;
+use App\Service\PaginateService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -11,33 +12,41 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ScheduleEventRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    /**
+     * @param ManagerRegistry $registry
+     * @param PaginateService $paginateService
+     */
+    public function __construct(ManagerRegistry $registry, PaginateService $paginateService)
     {
         parent::__construct($registry, ScheduleEvent::class);
+        $this->paginateService = $paginateService;
     }
 
-    //    /**
-    //     * @return ScheduleEvent[] Returns an array of ScheduleEvent objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('s.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * @param array $data
+     * @param int $itemsPerPage
+     * @param int $page
+     * @return array
+     */
+    public function getAllByFilter(array $data, int $itemsPerPage, int $page): array
+    {
+        $qb = $this->createQueryBuilder('se');
 
-    //    public function findOneBySomeField($value): ?ScheduleEvent
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        if (!empty($data['meetingLink'])) {
+            $qb->andWhere('se.meetingLink LIKE :link')
+                ->setParameter('link', '%' . $data['meetingLink'] . '%');
+        }
+
+        if (!empty($data['courseId'])) {
+            $qb->andWhere('se.course = :courseId')
+                ->setParameter('courseId', $data['courseId']);
+        }
+
+        if (!empty($data['groupId'])) {
+            $qb->andWhere('se.group = :groupId')
+                ->setParameter('groupId', $data['groupId']);
+        }
+
+        return $this->paginateService->paginate($qb, $itemsPerPage, $page);
+    }
 }

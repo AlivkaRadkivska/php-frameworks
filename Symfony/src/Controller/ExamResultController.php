@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/exam-result', name: 'exam_result_routes')]
 class ExamResultController extends AbstractController
 {
+    public const ITEMS_PER_PAGE = 5;
     private EntityManagerInterface $entityManager;
     private ExamResultRepository $examResultRepository;
     private ExamRepository $examRepository;
@@ -37,13 +38,17 @@ class ExamResultController extends AbstractController
     /**
      * Get all exam results.
      *
+     * @param Request $request
      * @return JsonResponse
      */
     #[Route('/', name: 'get_exam_results', methods: ['GET'])]
-    public function getExamResults(): JsonResponse
+    public function getExamResults(Request $request): JsonResponse
     {
-        $results = $this->examResultRepository->findAll();
-        $data = array_map(fn(ExamResult $result) => $result->jsonSerialize(), $results);
+        $requestData = $request->query->all();
+        $itemsPerPage = (int) ($requestData['itemsPerPage'] ?? self::ITEMS_PER_PAGE);
+        $page = (int) ($requestData['page'] ?? 1);
+        $data = $this->examResultRepository->getAllByFilter($requestData, $itemsPerPage, $page);
+
         return new JsonResponse($data, Response::HTTP_OK);
     }
 

@@ -16,6 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/schedule-event', name: 'schedule_event_routes')]
 class ScheduleEventController extends AbstractController
 {
+    public const ITEMS_PER_PAGE = 5;
     private EntityManagerInterface $entityManager;
     private ScheduleEventRepository $scheduleEventRepository;
     private CourseRepository $courseRepository;
@@ -42,13 +43,17 @@ class ScheduleEventController extends AbstractController
     /**
      * Get all schedule events.
      *
+     * @param Request $request
      * @return JsonResponse
      */
     #[Route('/', name: 'get_schedule_events', methods: ['GET'])]
-    public function getScheduleEvents(): JsonResponse
+    public function getScheduleEvents(Request $request): JsonResponse
     {
-        $events = $this->scheduleEventRepository->findAll();
-        $data = array_map(fn(ScheduleEvent $event) => $event->jsonSerialize(), $events);
+        $requestData = $request->query->all();
+        $itemsPerPage = (int) ($requestData['itemsPerPage'] ?? self::ITEMS_PER_PAGE);
+        $page = (int) ($requestData['page'] ?? 1);
+        $data = $this->scheduleEventRepository->getAllByFilter($requestData, $itemsPerPage, $page);
+
         return new JsonResponse($data, Response::HTTP_OK);
     }
 
@@ -57,6 +62,7 @@ class ScheduleEventController extends AbstractController
      *
      * @param Request $request
      * @return JsonResponse
+     * @throws \DateMalformedStringException
      */
     #[Route('/', name: 'create_schedule_event', methods: ['POST'])]
     public function createScheduleEvent(Request $request): JsonResponse
@@ -114,6 +120,7 @@ class ScheduleEventController extends AbstractController
      * @param Request $request
      * @param int $id
      * @return JsonResponse
+     * @throws \DateMalformedStringException
      */
     #[Route('/{id}', name: 'update_schedule_event', methods: ['PATCH'])]
     public function updateScheduleEvent(Request $request, int $id): JsonResponse

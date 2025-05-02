@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\ExamResult;
+use App\Service\PaginateService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -11,33 +12,36 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ExamResultRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    /**
+     * @param ManagerRegistry $registry
+     * @param PaginateService $paginateService
+     */
+    public function __construct(ManagerRegistry $registry, PaginateService $paginateService)
     {
         parent::__construct($registry, ExamResult::class);
+        $this->paginateService = $paginateService;
     }
 
-    //    /**
-    //     * @return ExamResult[] Returns an array of ExamResult objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('e')
-    //            ->andWhere('e.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('e.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * @param array $data
+     * @param int $itemsPerPage
+     * @param int $page
+     * @return array
+     */
+    public function getAllByFilter(array $data, int $itemsPerPage, int $page): array
+    {
+        $qb = $this->createQueryBuilder('er');
 
-    //    public function findOneBySomeField($value): ?ExamResult
-    //    {
-    //        return $this->createQueryBuilder('e')
-    //            ->andWhere('e.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        if (!empty($data['studentName'])) {
+            $qb->andWhere('er.studentName LIKE :studentName')
+                ->setParameter('studentName', '%' . $data['studentName'] . '%');
+        }
+
+        if (!empty($data['examId'])) {
+            $qb->andWhere('er.exam = :examId')
+                ->setParameter('examId', $data['examId']);
+        }
+
+        return $this->paginateService->paginate($qb, $itemsPerPage, $page);
+    }
 }

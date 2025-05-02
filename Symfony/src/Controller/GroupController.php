@@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/group', name: 'group_routes')]
 class GroupController extends AbstractController
 {
+    public const ITEMS_PER_PAGE = 5;
     private EntityManagerInterface $entityManager;
     private GroupRepository $groupRepository;
 
@@ -32,13 +33,17 @@ class GroupController extends AbstractController
     /**
      * Get all groups.
      *
+     * @param Request $request
      * @return JsonResponse
      */
     #[Route('/', name: 'get_groups', methods: ['GET'])]
-    public function getGroups(): JsonResponse
+    public function getGroups(Request $request): JsonResponse
     {
-        $groups = $this->groupRepository->findAll();
-        $data = array_map(fn(Group $group) => $group->jsonSerialize(), $groups);
+        $requestData = $request->query->all();
+        $itemsPerPage = (int) ($requestData['itemsPerPage'] ?? self::ITEMS_PER_PAGE);
+        $page = (int) ($requestData['page'] ?? 1);
+        $data = $this->groupRepository->getAllByFilter($requestData, $itemsPerPage, $page);
+
         return new JsonResponse($data, Response::HTTP_OK);
     }
 

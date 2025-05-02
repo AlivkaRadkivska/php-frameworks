@@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/course', name: 'course_routes')]
 class CourseController extends AbstractController
 {
+    public const ITEMS_PER_PAGE = 5;
     private EntityManagerInterface $entityManager;
     private CourseRepository $courseRepository;
 
@@ -30,13 +31,17 @@ class CourseController extends AbstractController
     /**
      * Get all courses.
      *
+     * @param Request $request
      * @return JsonResponse
      */
     #[Route('/', name: 'get_courses', methods: ['GET'])]
-    public function getCourses(): JsonResponse
+    public function getCourses(Request $request): JsonResponse
     {
-        $courses = $this->courseRepository->findAll();
-        $data = array_map(fn(Course $course) => $course->jsonSerialize(), $courses);
+        $requestData = $request->query->all();
+        $itemsPerPage = isset($requestData['itemsPerPage']) ? (int)$requestData['itemsPerPage'] : self::ITEMS_PER_PAGE;
+        $page = isset($requestData['page']) ? (int)$requestData['page'] : 1;
+        $data = $this->courseRepository->getAllByFilter($requestData, $itemsPerPage, $page);
+
         return new JsonResponse($data, Response::HTTP_OK);
     }
 

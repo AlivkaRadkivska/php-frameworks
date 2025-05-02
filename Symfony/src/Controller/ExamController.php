@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/exam', name: 'exam_routes')]
 class ExamController extends AbstractController
 {
+    public const ITEMS_PER_PAGE = 5;
     private EntityManagerInterface $entityManager;
     private ExamRepository $examRepository;
     private CourseRepository $courseRepository;
@@ -37,21 +38,28 @@ class ExamController extends AbstractController
     /**
      * Get all exams.
      *
+     * @param Request $request
      * @return JsonResponse
      */
     #[Route('/', name: 'get_exams', methods: ['GET'])]
-    public function getExams(): JsonResponse
+    public function getExams(Request $request): JsonResponse
     {
-        $exams = $this->examRepository->findAll();
-        $data = array_map(fn(Exam $exam) => $exam->jsonSerialize(), $exams);
+        $requestData = $request->query->all();
+        $itemsPerPage = (int) ($requestData['itemsPerPage'] ?? self::ITEMS_PER_PAGE);
+        $page = (int) ($requestData['page'] ?? 1);
+        $data = $this->examRepository->getAllByFilter($requestData, $itemsPerPage, $page);
+
         return new JsonResponse($data, Response::HTTP_OK);
     }
 
+
     /**
-     * Create a new exam.
+     * /**
+     *  Create a new exam.
      *
      * @param Request $request
      * @return JsonResponse
+     * @throws \DateMalformedStringException
      */
     #[Route('/', name: 'create_exam', methods: ['POST'])]
     public function createExam(Request $request): JsonResponse
@@ -105,6 +113,7 @@ class ExamController extends AbstractController
      * @param Request $request
      * @param int $id
      * @return JsonResponse
+     * @throws \DateMalformedStringException
      */
     #[Route('/{id}', name: 'update_exam', methods: ['PATCH'])]
     public function updateExam(Request $request, int $id): JsonResponse

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Group;
+use App\Service\PaginateService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -11,33 +12,41 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class GroupRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    /**
+     * @param ManagerRegistry $registry
+     * @param PaginateService $paginateService
+     */
+    public function __construct(ManagerRegistry $registry, PaginateService $paginateService)
     {
         parent::__construct($registry, Group::class);
+        $this->paginateService = $paginateService;
     }
 
-    //    /**
-    //     * @return Group[] Returns an array of Group objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('g')
-    //            ->andWhere('g.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('g.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * @param array $data
+     * @param int $itemsPerPage
+     * @param int $page
+     * @return array
+     */
+    public function getAllByFilter(array $data, int $itemsPerPage, int $page): array
+    {
+        $qb = $this->createQueryBuilder('g');
 
-    //    public function findOneBySomeField($value): ?Group
-    //    {
-    //        return $this->createQueryBuilder('g')
-    //            ->andWhere('g.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        if (!empty($data['name'])) {
+            $qb->andWhere('g.name LIKE :name')
+                ->setParameter('name', '%' . $data['name'] . '%');
+        }
+
+        if (!empty($data['major'])) {
+            $qb->andWhere('g.major LIKE :major')
+                ->setParameter('major', '%' . $data['major'] . '%');
+        }
+
+        if (!empty($data['year'])) {
+            $qb->andWhere('g.year = :year')
+                ->setParameter('year', $data['year']);
+        }
+
+        return $this->paginateService->paginate($qb, $itemsPerPage, $page);
+    }
 }
